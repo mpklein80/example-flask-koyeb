@@ -1,4 +1,4 @@
-# pip3 freeze > requirements.txt
+#  pip3 freeze > requirements.txt
 from flask import Flask
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData
 
