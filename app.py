@@ -1,4 +1,4 @@
-# gunicorn does not run on windows, but works on koyeb
+#  gunicorn does not run on windows, but works on koyeb
 #  pip3 freeze > requirements.txt
 # also need in requirement ...    gunicorn==20.1.0
 from flask import Flask
