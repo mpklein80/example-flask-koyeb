@@ -30,7 +30,7 @@ def head():
     content = "<head><script src='static/python_js.js'></script>"
     content +=  "<link rel='stylesheet' type='text/css' href='static/python_style.css'></head><body>"
     content += info_box()
-    return content
+    return "hi"
 
 def load_quiz(category,exercise):
     content = ""
