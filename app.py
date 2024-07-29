@@ -8,6 +8,12 @@ from flask import Flask, session, request
 
 app = Flask(__name__, static_folder='static')
 
+def init_db(the_db):
+    conn = sqlite3.connect(the_db)
+    conn.execute('PRAGMA journal_mode=WAL;') #enable WAL mode
+    conn.isolation_level = None # Enable auto commit mode
+    return conn
+
 id_form = '''<form action='' method="post"> ID <input type="text" name="id"> Password <input type="text" name="password"> <input type="submit" value="Login" /> </form>'''
 
 def info_box():
@@ -30,7 +36,7 @@ def head():
     content = "<head><script src='static/python_js.js'></script>"
     content +=  "<link rel='stylesheet' type='text/css' href='static/python_style.css'></head><body>"
     content += info_box()
-    return "hi"
+    return content
 
 def load_quiz(category,exercise):
     content = ""
@@ -85,6 +91,13 @@ def valid_login(the_id,the_password):
         session["name"] = response[1]
         conn.close()
         return True
+
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    conn = init_db('ids.db')
+    cursor = conn.execute("SELECT * from ids")
+    response = cursor.fetchall()
+    return str(response)
 
 @app.route('/', methods=['GET', 'POST'])
 def run():
