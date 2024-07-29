@@ -4,7 +4,7 @@
 
 import sys  #only for printing python number
 import sqlite3
-from flask import Flask, session, request
+from flask import Flask, session, request, render_template
 
 app = Flask(__name__, static_folder='static')
 
@@ -132,7 +132,8 @@ def run():
             return head() + quiz_form() + "<br><br>" + response + "<br>" + answers + "<br>" + score
 
 
-    return head() + id_form
+    #return head() + id_form
+    return render_template("index.html")
 
 if __name__ == '__main__':
     app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
