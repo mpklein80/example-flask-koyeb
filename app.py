@@ -16,14 +16,6 @@ def init_db(the_db):
 
 id_form = '''<form action='' method="post"> ID <input type="text" name="id"> Password <input type="text" name="password"> <input type="submit" value="Login" /> </form>'''
 
-def info_box():
-    box=""
-    if 'id' in session:
-        box = "<div class = 'info_box'><ul><li>ID:  " + session['id'] + "</li></ul></div>"
-        if 'exercise' in session:
-            box = "<div class = 'info_box'><ul><li>ID:  " + session['id'] + "</li><li>Exercise:  " + session['exercise'] + "</li></ul></div>"
-    box += "<div class='python_message'>Python:  " + sys.version + "</div>"
-    return box
 
 
 def submit_score(score):
@@ -32,11 +24,6 @@ def submit_score(score):
     conn.commit()
     conn.close()
 
-def head():
-    content = "<head><script src='static/python_js.js'></script>"
-    content +=  "<link rel='stylesheet' type='text/css' href='static/python_style.css'></head><body>"
-    content += info_box()
-    return content
 
 def load_quiz(category,exercise):
     content = ""
@@ -80,7 +67,7 @@ def quiz_form():
 def valid_login(the_id,the_password):
     the_id = "".join([c for c in the_id if c.isalnum()])
     the_password = "".join([c for c in the_password if c.isalnum()])
-    conn = sqlite3.connect('ids.db')
+    conn = init_db('ids.db')
     cursor = conn.execute("SELECT id,name from ids where id='" + the_id + "' and password='" + the_password + "'")
     response = cursor.fetchone()
     if response is None:
@@ -103,13 +90,11 @@ def test():
 def run():
     session['tmp'] = 43
 
-    if request.method == "POST":
-        #return valid_login(request.form['id'], request.form['password'])
-
-        if valid_login(request.form['id'], request.form['password']):
-            return head() + quiz_form() + "<br><br>Hi " + session["id"] + " , you have logged in"
+    if request.form.get('id') is not None:
+        if valid_login(request.form.get('id'), request.form.get('password')):
+            return "Hi " + session["name"] + " , you have logged in"
         else:
-            return head() + id_form + "<br><br>INCORRECT LOGIN"
+            return "INCORRECT LOGIN"
 
 
     if request.method == "GET":
