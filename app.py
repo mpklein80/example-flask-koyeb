@@ -4,7 +4,7 @@
 
 import sys  #only for printing python number
 import sqlite3
-from flask import Flask, session, request, render_template
+from flask import Flask, session, request, render_template, redirect, url_for
 
 app = Flask(__name__, static_folder='static')
 
@@ -81,13 +81,15 @@ def valid_login(the_id,the_password):
 
 @app.route('/test', methods=['GET', 'POST'])
 def test():
+    if "name" not in session:
+        return redirect('/')
     conn = init_db('ids.db')
     cursor = conn.execute("SELECT * from ids")
     response = cursor.fetchall()
     return str(response)
 
 @app.route('/', methods=['GET', 'POST'])
-def run():
+def root():
     session['tmp'] = 43
 
     if request.form.get('id') is not None:
