@@ -11,7 +11,8 @@ app = Flask(__name__, static_folder='static')
 def init_db(the_db):
     conn = sqlite3.connect(the_db)
     conn.execute('PRAGMA journal_mode=WAL;') #enable WAL mode
-    conn.isolation_level = None # Enable auto commit mode
+    conn.isolation_level = None # enable auto commit mode
+    conn.row_factory = sqlite3.Row # return dictionaries
     return conn
 
 id_form = '''<form action='' method="post"> ID <input type="text" name="id"> Password <input type="text" name="password"> <input type="submit" value="Login" /> </form>'''
@@ -87,6 +88,19 @@ def test():
     cursor = conn.execute("SELECT * from ids")
     response = cursor.fetchall()
     return str(response)
+
+
+
+@app.route('/solo', methods=['GET', 'POST'])
+def solo():
+    if "name" not in session:
+        return redirect('/')
+    conn = init_db('allqs.db')
+    cursor = conn.execute("SELECT distinct file from allqs")
+    response = cursor.fetchall()
+    return str(response)
+
+
 
 @app.route('/', methods=['GET', 'POST'])
 def root():
